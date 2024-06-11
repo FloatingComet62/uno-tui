@@ -1,9 +1,9 @@
 import {
-    createRandomPlayers,
-    gameToString,
-    initGame,
-    pickUpCard,
-    placeCard,
+	createRandomPlayers,
+	gameToString,
+	initGame,
+	pickUpCard,
+	placeCard,
 } from './game';
 
 let game = initGame(createRandomPlayers(2, 5));
