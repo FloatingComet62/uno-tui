@@ -4,7 +4,7 @@
   "description": "Play uno over socket in your terminal",
   "main": "dist/src/index.js",
   "scripts": {
-    "test": "echo \"No Test\"",
+    "test": "jest",
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "prettier --ignore-path .gitignore --write \"**/*.+(ts)\"",
