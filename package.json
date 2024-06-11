@@ -1,0 +1,35 @@
+{
+  "name": "uno-tui",
+  "version": "1.0.0",
+  "description": "Play uno over socket in your terminal",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "echo \"No Test\"",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "prettier --ignore-path .gitignore --write \"**/*.+(ts)\"",
+    "clean": "rm -rf dist node_modules",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FloatingComet62/uno-tui.git"
+  },
+  "keywords": [
+    "uno"
+  ],
+  "author": "FloatingComet62",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/FloatingComet62/uno-tui/issues"
+  },
+  "homepage": "https://github.com/FloatingComet62/uno-tui#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.2",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.2",
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5"
+  }
+}
