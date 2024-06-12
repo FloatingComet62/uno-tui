@@ -27,52 +27,64 @@ export function initGame(players: Player[]): Game | undefined {
 		acceptingColors: ['black', card.color],
 	};
 }
-export function currentPlayer(game: Game): Player {
-	return game.players[game.currentPlayer];
+export function currentPlayer({ players, currentPlayer }: Game): Player {
+	return players[currentPlayer];
 }
-export function nextTurn(game: Game): void {
-	game.currentPlayer += 1 * game.direction;
-	if (game.currentPlayer == game.players.length) {
-		game.currentPlayer = 0;
+export function nextTurn({ currentPlayer, direction, players }: Game): void {
+	currentPlayer += direction;
+	if (currentPlayer == players.length) {
+		currentPlayer = 0;
 	}
-	if (game.currentPlayer < 0) {
-		game.currentPlayer += game.players.length;
+	if (currentPlayer < 0) {
+		currentPlayer += players.length;
 	}
 }
-export function pickUpCard(game: Game, pickingPlayerIndex: number): Card {
-	let card = randomCard(labelList, colorList);
-	game.players[pickingPlayerIndex].push(card);
-	return card;
+export function pickUpCard(
+	{ players, currentPlayer }: Game,
+	times = 1,
+): Card[] {
+	return Array(times)
+		.fill(0)
+		.map(() => {
+			let card = randomCard(labelList, colorList);
+			players[currentPlayer].push(card);
+			return card;
+		});
 }
 export function canPlaceCard(
-	game: Game,
+	acceptingColors: Color[],
 	placingCard: Card,
 	lastCard: Card,
 ): boolean {
 	return (
-		game.acceptingColors.includes(placingCard.color) ||
+		acceptingColors.includes(placingCard.color) ||
 		lastCard.label == placingCard.label
 	);
 }
 export function placeCard(
-	game: Game,
+	{ table, players, acceptingColors }: Game,
 	placingPlayerIndex: number,
 	placingCardIndex: number,
 ): boolean {
-	const lastCard = last(game.table);
-	const placingCard = game.players[placingPlayerIndex][placingCardIndex];
-	if (!canPlaceCard(game, placingCard, lastCard)) {
+	const lastCard = last(table);
+	const placingCard = players[placingPlayerIndex][placingCardIndex];
+	if (!canPlaceCard(acceptingColors, placingCard, lastCard)) {
 		return false;
 	}
-	game.table.push(placingCard);
-	game.players[placingPlayerIndex].splice(placingCardIndex, 1);
+	table.push(placingCard);
+	players[placingPlayerIndex].splice(placingCardIndex, 1);
 	return true;
 }
-export function gameToString(game: Game): string {
+export function gameToString({
+	players,
+	table,
+	currentPlayer,
+	acceptingColors,
+}: Game): string {
 	return JSON.stringify({
-		players: game.players.map(playerToString),
-		table: game.table.map(cardToCode),
-		currentPlayer: game.currentPlayer,
-		acceptingColors: game.acceptingColors,
+		players: players.map(playerToString),
+		table: table.map(cardToCode),
+		currentPlayer,
+		acceptingColors,
 	});
 }

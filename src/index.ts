@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+import inquirer, { QuestionCollection } from 'inquirer';
 import { Card, cardToReadable } from './card.js';
 import {
 	Game,
@@ -10,7 +10,7 @@ import {
 	placeCard,
 } from './game.js';
 import { last } from './helper.js';
-import { createRandomPlayers } from './player.js';
+import { Player, createRandomPlayers } from './player.js';
 import { Color, nonBlackColor } from './color.js';
 
 let game = initGame(createRandomPlayers(2, 3));
@@ -21,16 +21,14 @@ if (game == undefined) {
 async function playTurn(game: Game, alreadyPicked = false): Promise<boolean> {
 	const cardOnTable = last(game.table);
 	const canPlay = currentPlayer(game).some((card) =>
-		canPlaceCard(game, card, cardOnTable),
+		canPlaceCard(game.acceptingColors, card, cardOnTable),
 	);
 	if (alreadyPicked && !canPlay) {
 		return false;
 	}
 	if (!canPlay) {
-		let card = cardToReadable(pickUpCard(game, game.currentPlayer));
-		console.log(
-			`Player ${game.currentPlayer} picked up ${card}`,
-		);
+		let card = cardToReadable(pickUpCard(game)[0]);
+		console.log(`Player ${game.currentPlayer} picked up ${card}`);
 		return await playTurn(game, true);
 	}
 	console.log(`Card on the table is: ${cardToReadable(cardOnTable)}`);
@@ -44,18 +42,16 @@ async function playTurn(game: Game, alreadyPicked = false): Promise<boolean> {
 			value: -1,
 		},
 	];
-	const prompt = {
+	const prompt: QuestionCollection<any> = [{
 		name: 'res',
 		message: `Choose card (Player: ${game.currentPlayer})`,
 		type: 'list',
 		choices,
-	};
-	const answer = (await inquirer.prompt([prompt])).res as number;
+	}];
+	const answer = (await inquirer.prompt(prompt)).res as number;
 	if (answer == -1) {
-		let card = cardToReadable(pickUpCard(game, game.currentPlayer));
-		console.log(
-			`Player ${game.currentPlayer} picked up ${card}`,
-		);
+		let card = cardToReadable(pickUpCard(game)[0]);
+		console.log(`Player ${game.currentPlayer} picked up ${card}`);
 		return await playTurn(game, true);
 	}
 	if (!placeCard(game, game.currentPlayer, answer)) {
@@ -68,13 +64,13 @@ async function playTurn(game: Game, alreadyPicked = false): Promise<boolean> {
 async function handleSpecialEvents(game: Game, placedCard: Card) {
 	game.acceptingColors[1] = placedCard.color;
 	if (placedCard.color == 'black') {
-		const prompt = {
+		const prompt: QuestionCollection<any> = [{
 			name: 'res',
 			message: `Choose color (Player: ${game.currentPlayer})`,
 			type: 'list',
 			choices: nonBlackColor(),
-		};
-		const answer = (await inquirer.prompt([prompt])).res as Color;
+		}];
+		const answer = (await inquirer.prompt(prompt)).res as Color;
 		game.acceptingColors[1] = answer;
 	}
 	if (placedCard.label == 'Reverse') {
@@ -83,22 +79,18 @@ async function handleSpecialEvents(game: Game, placedCard: Card) {
 	} else {
 		nextTurn(game);
 		if (placedCard.label == '+2') {
-			pickUpCard(game, game.currentPlayer);
-			pickUpCard(game, game.currentPlayer);
+			pickUpCard(game, 2);
 		} else if (placedCard.label == '+4') {
-			pickUpCard(game, game.currentPlayer);
-			pickUpCard(game, game.currentPlayer);
-			pickUpCard(game, game.currentPlayer);
-			pickUpCard(game, game.currentPlayer);
+			pickUpCard(game, 4);
 		} else if (placedCard.label == 'Skip') {
 			nextTurn(game);
 		}
 	}
 }
 
-function checkForWinner(game: Game): boolean {
-	for (let i = 0; i < game.players.length; i++) {
-		const player = game.players[i];
+function checkForWinner(players: Player[]): boolean {
+	for (let i = 0; i < players.length; i++) {
+		const player = players[i];
 		if (player.length == 0) {
 			console.log(`Player ${i} won!`);
 			return true;
@@ -109,13 +101,12 @@ function checkForWinner(game: Game): boolean {
 
 async function main(game: Game) {
 	while (true) {
-		// console.log(gameToString(game));
 		if (await playTurn(game)) {
 			await handleSpecialEvents(game, last(game.table));
 		} else {
 			nextTurn(game);
 		}
-		if (checkForWinner(game)) {
+		if (checkForWinner(game.players)) {
 			return;
 		}
 	}
