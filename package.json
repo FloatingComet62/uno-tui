@@ -2,6 +2,7 @@
   "name": "uno-tui",
   "version": "1.0.0",
   "description": "Play uno over socket in your terminal",
+  "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "jest",
@@ -25,11 +26,15 @@
   },
   "homepage": "https://github.com/FloatingComet62/uno-tui#readme",
   "devDependencies": {
+    "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.2",
     "jest": "^29.7.0",
     "prettier": "^3.3.2",
     "ts-jest": "^29.1.4",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "inquirer": "^9.2.23"
   }
 }

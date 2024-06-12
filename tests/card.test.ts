@@ -1,4 +1,4 @@
-import { cardToCode, codeToCard, initCard } from '../src/card';
+import { cardToCode, codeToCard, initCard } from '../src/card.js';
 
 describe('Serialization of Card', () => {
 	test('Serialize Card', () => {

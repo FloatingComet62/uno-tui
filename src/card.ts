@@ -1,5 +1,13 @@
-import { Label, codeToLabel, labelToCode } from './label';
-import { Color, codeToColor, colorToCode } from './color';
+import {
+	Label,
+	blackCards,
+	codeToLabel,
+	colorCards,
+	labelToCode,
+	labelToReadable,
+} from './label.js';
+import { Color, codeToColor, colorToCode, colorToReadable } from './color.js';
+import { random } from './helper.js';
 
 export type Card = {
 	label: Label;
@@ -13,11 +21,21 @@ export function codeToCard(unknownCaseCode: string): Card | undefined {
 	let color = codeToColor(code[0]);
 	let label = codeToLabel(code.slice(1));
 	if (color == undefined || label == undefined) {
-		console.warn(`Failed to parse card: ${unknownCaseCode}`)
+		console.warn(`Failed to parse card: ${unknownCaseCode}`);
 		return undefined;
 	}
 	return { label, color };
 }
 export function cardToCode(card: Card): string {
 	return colorToCode(card.color) + labelToCode(card.label);
+}
+export function cardToReadable(card: Card): string {
+	return `${colorToReadable(card.color)} ${labelToReadable(card.label)}`;
+}
+export function randomCard(labelList: Label[], colorList: Color[]): Card {
+	let color = random(colorList);
+	return {
+		color,
+		label: random(color == 'black' ? blackCards() : colorCards()),
+	};
 }

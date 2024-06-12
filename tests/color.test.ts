@@ -1,4 +1,4 @@
-import { codeToColor, colorToCode } from '../src/color';
+import { codeToColor, colorToCode } from '../src/color.js';
 
 describe('Serialization of Color', () => {
 	test('Serialize Color', () => {

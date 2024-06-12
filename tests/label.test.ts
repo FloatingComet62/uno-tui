@@ -1,4 +1,4 @@
-import { codeToLabel, labelToCode } from '../src/label';
+import { codeToLabel, labelToCode } from '../src/label.js';
 
 describe('Serialization of Label', () => {
 	test('Serialize Label', () => {
