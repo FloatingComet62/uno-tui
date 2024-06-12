@@ -27,9 +27,9 @@ async function playTurn(game: Game, alreadyPicked = false): Promise<boolean> {
 		return false;
 	}
 	if (!canPlay) {
-		pickUpCard(game, game.currentPlayer);
+		let card = cardToReadable(pickUpCard(game, game.currentPlayer));
 		console.log(
-			`Player ${game.currentPlayer} picked up ${cardToReadable(last(currentPlayer(game)))}`,
+			`Player ${game.currentPlayer} picked up ${card}`,
 		);
 		return await playTurn(game, true);
 	}
@@ -52,9 +52,9 @@ async function playTurn(game: Game, alreadyPicked = false): Promise<boolean> {
 	};
 	const answer = (await inquirer.prompt([prompt])).res as number;
 	if (answer == -1) {
-		pickUpCard(game, game.currentPlayer);
+		let card = cardToReadable(pickUpCard(game, game.currentPlayer));
 		console.log(
-			`Player ${game.currentPlayer} picked up ${cardToReadable(last(currentPlayer(game)))}`,
+			`Player ${game.currentPlayer} picked up ${card}`,
 		);
 		return await playTurn(game, true);
 	}
@@ -96,6 +96,17 @@ async function handleSpecialEvents(game: Game, placedCard: Card) {
 	}
 }
 
+function checkForWinner(game: Game): boolean {
+	for (let i = 0; i < game.players.length; i++) {
+		const player = game.players[i];
+		if (player.length == 0) {
+			console.log(`Player ${i} won!`);
+			return true;
+		}
+	}
+	return false;
+}
+
 async function main(game: Game) {
 	while (true) {
 		// console.log(gameToString(game));
@@ -104,13 +115,8 @@ async function main(game: Game) {
 		} else {
 			nextTurn(game);
 		}
-
-		for (let i = 0; i < game.players.length; i++) {
-			const player = game.players[i];
-			if (player.length == 0) {
-				console.log(`Player ${i} won!`);
-				return;
-			}
+		if (checkForWinner(game)) {
+			return;
 		}
 	}
 }

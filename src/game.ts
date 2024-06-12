@@ -39,8 +39,10 @@ export function nextTurn(game: Game): void {
 		game.currentPlayer += game.players.length;
 	}
 }
-export function pickUpCard(game: Game, pickingPlayerIndex: number): void {
-	game.players[pickingPlayerIndex].push(randomCard(labelList, colorList));
+export function pickUpCard(game: Game, pickingPlayerIndex: number): Card {
+	let card = randomCard(labelList, colorList);
+	game.players[pickingPlayerIndex].push(card);
+	return card;
 }
 export function canPlaceCard(
 	game: Game,
