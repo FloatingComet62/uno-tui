@@ -10,11 +10,9 @@ export function createRandomPlayers(
 	numberOfPlayers: number,
 	numberOfCardsPerPerson: number,
 ): Player[] {
-	return Array(numberOfPlayers)
-		.fill(0)
-		.map(() =>
-			Array(numberOfCardsPerPerson)
-				.fill(0)
-				.map(() => randomCard(labelList, colorList)),
-		);
+	const genPlayer = () =>
+		Array(numberOfCardsPerPerson)
+			.fill(0)
+			.map(() => randomCard(labelList, colorList));
+	return Array(numberOfPlayers).fill(0).map(genPlayer);
 }

@@ -34,8 +34,13 @@ export function cardToReadable(card: Card): string {
 }
 export function randomCard(labelList: Label[], colorList: Color[]): Card {
 	let color = random(colorList);
+	let validLabels = color == 'black' ? blackCards() : colorCards();
+	let labels = validLabels.filter((validLabel) =>
+		labelList.includes(validLabel),
+	);
+
 	return {
 		color,
-		label: random(color == 'black' ? blackCards() : colorCards()),
+		label: random(labels),
 	};
 }

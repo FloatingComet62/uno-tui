@@ -33,7 +33,7 @@ export const labelList: Label[] = [
 	'Wild',
 ];
 export function colorCards(): Label[] {
-	return labelList.slice(0, labelList.length - 5);
+	return labelList.slice(0, labelList.length - 2);
 }
 export function blackCards(): Label[] {
 	return labelList.slice(13);

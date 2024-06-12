@@ -70,5 +70,7 @@ export function gameToString(game: Game): string {
 	return JSON.stringify({
 		players: game.players.map(playerToString),
 		table: game.table.map(cardToCode),
+		currentPlayer: game.currentPlayer,
+		acceptingColors: game.acceptingColors,
 	});
 }
