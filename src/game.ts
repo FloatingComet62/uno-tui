@@ -1,7 +1,7 @@
 import { Card, cardToCode, randomCard } from './card.js';
 import { Color, colorList, nonBlackColor } from './color.js';
 import { last } from './helper.js';
-import { Label, labelList, noPowerup } from './label.js';
+import { labelList, noPowerup } from './label.js';
 import { Player, playerToString } from './player.js';
 
 export type Game = {

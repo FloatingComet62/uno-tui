@@ -4,7 +4,6 @@ import {
 	Game,
 	canPlaceCard,
 	currentPlayer,
-	gameToString,
 	initGame,
 	nextTurn,
 	pickUpCard,
