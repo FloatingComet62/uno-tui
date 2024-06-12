@@ -13,6 +13,7 @@ export function codeToCard(unknownCaseCode: string): Card | undefined {
 	let color = codeToColor(code[0]);
 	let label = codeToLabel(code.slice(1));
 	if (color == undefined || label == undefined) {
+		console.warn(`Failed to parse card: ${unknownCaseCode}`)
 		return undefined;
 	}
 	return { label, color };

@@ -23,4 +23,5 @@ export function codeToColor(unknownCaseCode: string): Color | undefined {
 	if (code == 'k') {
 		return 'black';
 	}
+	console.warn(`Failed to parse color: ${unknownCaseCode}`)
 }

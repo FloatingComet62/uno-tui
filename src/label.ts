@@ -53,4 +53,5 @@ export function codeToLabel(unknownCaseCode: string): Label | undefined {
 	) {
 		return code as Label;
 	}
+	console.warn(`Failed to parse color: ${unknownCaseCode}`)
 }

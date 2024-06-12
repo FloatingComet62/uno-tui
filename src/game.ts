@@ -1,6 +1,7 @@
 import { Card, cardToCode } from './card';
 import { Color, colorList } from './color';
 import { Label, labelList } from './label';
+import { Player, playerToString } from './player';
 
 function random<T>(options: T[]): T {
 	return options[Math.floor(Math.random() * options.length)];
@@ -9,13 +10,18 @@ function last<T>(array: T[]): T {
 	return array[array.length - 1];
 }
 
-type Player = Card[];
 type Game = {
 	players: Player[];
 	/// Cards placed
 	table: Card[];
+
+	currentPlayer: number;
 };
-export function initGame(players: Player[]): Game {
+export function initGame(players: Player[]): Game | undefined {
+	if (players.length < 2) {
+		console.warn('A game needs atleast 2 players');
+		return undefined;
+	}
 	return {
 		players,
 		table: [
@@ -24,7 +30,14 @@ export function initGame(players: Player[]): Game {
 				colorList.slice(0, colorList.length - 1),
 			),
 		],
+		currentPlayer: 0
 	};
+}
+export function nextTurn(game: Game): void {
+	game.currentPlayer += 1;
+	if (game.currentPlayer == game.players.length) {
+		game.currentPlayer = 0;
+	}
 }
 export function pickUpCard(game: Game, pickingPlayerIndex: number): void {
 	game.players[pickingPlayerIndex].push(randomCard(labelList, colorList));
@@ -66,9 +79,7 @@ export function randomCard(labelList: Label[], colorList: Color[]): Card {
 }
 export function gameToString(game: Game): string {
 	return JSON.stringify({
-		players: game.players.map((player) =>
-			player.map((card) => cardToCode(card)).join(' '),
-		),
-		table: game.table.map((card) => cardToCode(card)),
+		players: game.players.map(playerToString),
+		table: game.table.map(cardToCode),
 	});
 }
